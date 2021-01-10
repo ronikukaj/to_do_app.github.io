@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <style>
+            .jumbotron{
+                border-bottom: 2px solid #F27F1B;
+            }
+            .jumbotron .container h1{
+                text-shadow: 1px 1px #F27F1B;
+            }
+            .container .col-md-5{
+                border: 2px solid #F27F1B;
+                border-radius: 20px;
+                border-top: 5px solid #F27F1B;
+                border-bottom: 5px solid #F27F1B;
+            }
+            ._item{
+                text-decoration: none;
+                border-radius: 20px;
+                text-align: center;
+                width: 100%;
+            }
+            ._item:hover{
+                text-decoration: none;
+                background-color: #F27F1B;
+            }
+            hr{
+                background-color: #F27F1B;
+            }
+            #finished{
+                margin: 10px 10px 10px 10px;
+                border-radius: 20px;
+                text-align: center;
+            }
+            #add{
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Jumbotron -->
+        <div class="jumbotron jumbotron-fluid bg-info">
+            <div class="container">
+                <h1 class="text-center">TO DO LIST <br> Web Application</h1>
+            </div>
+        </div>
+
+        <!-- Main container -->
+        <div class="container">
+            <div class="row justify-content-center mt-5">
+
+                <!-- Submitting form modal -->
+                <button class="btn btn-info ml-1 mr-1 btn-lg" data-toggle="collapse" href="#collapseForm" aria-controls="collapseForm">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+                    </svg>
+                </button>
+                <div class="collapse" id="collapseForm">
+                    <div class="card card-body ml-1">
+                        <form class="form" action="{{ url_for('home') }}" method="post">
+                            <input type="textarea" name="holder" class="form-control form-control-md" placeholder="Enter item...">
+                            <button type="submit" name="button" class="btn btn-info mt-1">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items part -->
+            <div class="row justify-content-center mt-5">
+                <!-- To do -->
+                <div class="col-md-5 p-3 mr-4 ml-4 mt-1 h-auto">
+                    <h3 class="pl-2">To do</h3>
+                    <hr>
+                    {% for thing in to_do_items %}
+                        <a href="#" class="btn p-1 border border-info m-1 _item" id="_item" name="{{thing.id}}"
+                         data-toggle="modal" data-target="#finishOrDeleteModal">{{ thing.item }}</a>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="finishOrDeleteModal" tabindex="-1" aria-labelledby="finishOrDeleteModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="finishOrDeleteModalLabel">Finish or Delete item</h5>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <form class="form-group mt-3" method="post">
+                                                <a href="{{ url_for('delete', item_id=thing.id) }}" class="btn btn-danger btn-md mr-1">Delete</a>
+                                                <a href="{{ url_for('finish', item_id=thing.id) }}" class="btn btn-success btn-md ml-1">Finish</a>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                              </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Finished -->
+                <div class="col-md-5 p-3 mr-4 ml-4 mt-1 h-auto">
+                    <ul class="list-unstyled">
+                        <h3 class="pl-2">Finished</h3>
+                        <hr>
+                        {% for thing in finished_items %}
+                            <li class="button p-1 border border-info" id="finished">{{ thing.item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    </body>
+</html>
